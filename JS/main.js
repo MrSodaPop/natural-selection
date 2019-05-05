@@ -29,8 +29,7 @@ var draw = function() {
 
 var move = function(c,i) { // c = creature, i = index;
         if (c.energy <= 0) {
-                creatures.splice(i,1);
-                return;
+                return false;
         }
         if (objectDistance(c,c.target) > c.sense) {
                 c.target = null;
@@ -48,8 +47,32 @@ var move = function(c,i) { // c = creature, i = index;
         if (c.target == null) {
                 c.target = randomMovement(c);
         }
-
-        
+        let d = objectDistance(c,c.target);
+        if (c.target.x < c.x) {
+                c.x = c.x - (c.x - c.target.x) * c.speed / d;
+                if (c.target.y < c.y) {
+                        c.y = c.y - (c.y - c.target.y) * c.speed / d;
+                }
+                else {
+                        c.y = c.y - (c.target.y - c.y) * c.speed / d;
+                }
+        }
+        else {
+                c.x = c.x + (c.x - c.target.x) * c.speed / d;
+                if (c.target.y < c.y) {
+                        c.y = c.y - (c.y - c.target.y) * c.speed / d;
+                }
+                else {
+                        c.y = c.y - (c.target.y - c.y) * c.speed / d;
+                }
+        }
+        if (Math.abs(c.x-c.target.x) < c.speed && Math.abs(c.y-c.target.y) < c.speed) {
+                c.x = c.target.x;
+                c.y = c.target.y;
+        }
+        if (c.x === c.target.x && c.y === c.target.y) {
+                consume(c,c.target);
+        }
 }
 
 var clock = function() {

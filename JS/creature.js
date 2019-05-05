@@ -1,4 +1,5 @@
 var creature = function() {
+    this.id = null;
         
     this.home_x = Math.round(Math.random()) * 600;
     this.home_y = Math.floor(Math.random() * 600);
