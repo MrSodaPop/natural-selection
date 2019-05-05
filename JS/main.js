@@ -90,3 +90,7 @@ var energyToDistance = function(energy, creature) {
 var objectDistance = function(a,b) {
         return Math.sqrt((a.x-b.x)**2 + (a.y-b.y)**2);
 }
+
+var consume = function(a,b) {
+        a.energy += b.energy;
+}
