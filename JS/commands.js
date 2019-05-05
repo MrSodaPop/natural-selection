@@ -3,12 +3,16 @@ var next = function() {
     console.log('Next generation running.');
 }
 
-var auto = function() {
+var auto = function(fps) {
     if (auto) {
-        console.log('Automatic generations paused.');
+        console.log('Automatic generations disabled.');
+        clearInterval(clock);
     }
     else {
-        console.log('Automatic generations started.')
+        console.log('Automatic generations enabled.')
+        if (g) {
+            setInterval(clock(),parseInt(1000/fps));
+        }
     }
     auto = !auto
 }
@@ -45,7 +49,7 @@ var remove = function(amount) {
 
 var help = function() {
     console.log('next() -> advances to next generation.');
-    console.log('auto() -> toggles automatic simulation.');
+    console.log('auto(fps) -> toggles automatic simulation.');
     console.log('foodSet(amount) -> sets amount of food available on canvas.');
     console.log('random() -> randomises mutations of all creatures.');
     console.log('set(amount) -> sets the amount of creatures.');
@@ -57,8 +61,16 @@ var help = function() {
 var start = function(amount,foodAmount) {
     if (g) {
         console.log('Simulation in progress. Please reload page.');
+        return;
     }
-    food = [];
+    if (!!!amount|| !!!foodAmount) {
+        console.log('Invalid Input. \r\nAll simulations must have at least 1 creature and food.\r\nPlease try again.');
+        return;
+    }
+    amount = parseInt(amount);
+    foodAmount = parseInt(foodAmount);
+
+    foods = [];
     creatures = [];
     amount = parseInt(amount);
     foodAmount = parseInt(foodAmount)
@@ -66,8 +78,13 @@ var start = function(amount,foodAmount) {
         creatures.push(new creature());
     }
     for (let i = 0; i < foodAmount; i++) {
-        food.push(new food());
+        foods.push(new food());
     }
     g = true;
+    foodTotal = foodAmount;
+    if (auto) {
+        setInterval(clock(),parseInt(1000/fps));
+    }
+    loop();
     console.log('Simulation begun, type auto(time in seconds per day) to set automated simualtion.\r\nOr type next() to go to the next generation.');
 }
